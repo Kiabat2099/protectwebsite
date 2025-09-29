@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            box-sizing: border-box;
+            padding: 0;
+        }
+        .container{
+            display: grid ;
+            grid-template-columns:  1fr ;
+            grid-template-rows: auto 1fr auto;
+            grid-template-areas: 
+            "header"
+            "content"
+            "footer";
+            min-height: 100vh;
+        }
+        header{
+            grid-area: header;
+            padding: 2rem;
+            background-color: rgba(6, 23, 39, 1);
+            background: url(./back.png) no-repeat center center/cover;
+        }
+
+        main{
+            grid-area: content;
+            padding: 0.25rem;
+            background: url(./back.png) no-repeat center center/cover;
+        }
+
+        footer{
+            grid-area: footer;
+            padding: 2rem;
+            background-color: rgb(6, 6, 33);
+        }
+        @media (max-width:1024px){
+            .container{
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr  auto;
+                grid-template-areas:
+                "header"
+                "content"
+                "footer"
+            }
+        }
+        .sl{
+            padding: 0;
+        }
+        .slider-wrapper{
+            position: relative;
+            width: 100%;
+            height: 50vh; /* ارتفاع نسبی نسبت به صفحه */
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        .slider{
+            width: 100%;
+            height: 100%; /* تمام ارتفاع پدرش رو بگیره */
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            box-shadow: 0 1.5rem 3rem -0.75rem hsla(0, 0%, 0%, 0.25);
+            border-radius: 0.5rem;
+        }
+        .slider img{
+            flex: 1 0 100%;
+            width: 100%;
+            height: 100%; /* این باعث کشیده شدن تصویر می‌شود */
+            object-fit: cover;
+                }
+                .mySlides img {
+            width: 100%;
+            max-height: 500px; /* ارتفاع ثابت و قابل تغییر */
+            object-fit: cover; /* تصویر برش می‌خورد ولی فیت می‌شود */
+            display: block;
+            margin: 0 auto;
+        }
+        @media (max-width:768px){
+            .mySlides img {
+                max-height: 300px;
+            }
+        }
+        .slider-nav{
+            display: flex;
+            column-gap: 1rem;
+            position: absolute;
+            bottom: 1rem; /* فاصله از پایین خود اسلایدر */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+        .slider-nav a{
+            width: 0.75rem;
+            height: 0.75rem;
+            border-radius: 50%;
+            background-color: white;
+            opacity: 0.75;
+            transition: opacity ease 250ms;
+        }
+        .slider-nav a:hover{
+            opacity: 1;
+        }
+        .navbar{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 80px;
+            width: 100%;
+            position: sticky;
+            top: 0;
+            background: transparent;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            z-index: 999;
+        }
+        .navbar-container{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 2rem;
+            max-width: 1600px;
+        }
+        .navbar-logo{
+            display: flex;
+            align-items: center;
+            gap: 0.7rem; /* فاصله بین لوگو و متن */
+            text-decoration: none;
+            color: white;
+        }
+        .navbar-logo-img{
+            height: 55px;
+            width: auto;
+            object-fit: contain;
+            transition: all 0.3s ease;
+        }
+        .logo-text {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: white;
+        white-space: nowrap;
+        transition: font-size 0.3s ease;
+}
+
+        /* 📱 حالت ریسپانسیو فقط کوچیک شدن سایز متن */
+        @media (max-width: 768px) {
+            .navbar-logo-img {
+                height: 45px;
+            }
+
+            .logo-text {
+                font-size: 1.4rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar-logo-img {
+                height: 40px;
+            }
+
+            .logo-text {
+                font-size: 1.2rem;
+            }
+        }
+        
+        .navbar-menu{
+            display: flex;
+            text-align: center;
+            gap: 1.5rem;
+            list-style: none;
+        }
+        .navbar-container .navbar-menu li a {
+            text-decoration: none;
+            color: white;
+            font-size: 1.3rem;
+            font-weight: 500;
+            padding: 3px 20px;
+            border-radius: 20px;
+            border: 2px solid transparent;
+            transition: all 0.7s ease;
+            white-space: nowrap;
+        }
+        .navbar-container .navbar-menu li a:hover,
+        .navbar-container .navbar-menu li a:active,
+        .navbar-container .navbar-menu li a.active {
+            color: #162530;
+            background: rgba(188, 212, 229, 0.8);
+            border: 2px solid white;
+        }
+        .navbar-toggle{
+            display: none;
+            background: transparent;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+        }
+        .bar{
+            display: block;
+            width: 25px;
+            height: 3px;
+            margin: 5px auto;
+            background: white;
+            transition: all 0.3 ease-in-out;
+        }
+        @media (max-width:880px) {
+            .navbar{
+                backdrop-filter: none;
+            }
+            .navbar-container .navbar-menu{
+                display: none;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.7rem !important;
+                position: absolute;
+                height: 100vh;
+                width: 250px;
+                top: 0;
+                right: 0;
+                padding: 5rem 1.5rem;
+                box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
+                backdrop-filter: blur(10px);
+            }
+            .navbar-container .navbar-menu.active{
+                display: flex;
+            }
+            .navbar-toggle{
+                display: block;
+                z-index: 999;
+            }
+            .navbar-toggle.active.bar:nth-child(2) {
+                opacity: 0;
+            }
+            .navbar-toggle.active.bar:nth-child(1) {
+                transform: translateY(8px) rotate(45deg);
+            }
+            .navbar-toggle.active.bar:nth-child(3) {
+                transform: translateY(-8px) rotate(-45deg);
+            }
+        }
+         @media (max-width:480px) {
+            .navbar-container{
+                padding: 0 1rem;
+            }
+            .navbar-logo{
+                font-size: 1.7rem;
+            }
+            .navbar-container .navbar-menu li a {
+                font-size: 1.2rem;
+                padding: 3px 15px;
+            }
+            }
+
+            .slideshow-container {
+            max-width: 1000px;
+            position: relative;
+            margin: auto;
+            }
+
+            .mySlides {
+            display: none;
+            }
+
+            .prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: auto;
+            padding: 16px;
+                color: white;
+                font-weight: bold;
+                font-size: 18px;
+                transition: 0.6s ease;
+                border-radius: 0 3px 3px 0;
+                user-select: none;
+                z-index: 10; /* حتماً بالاتر از تصاویر */
+            }
+            .prev {
+                left: 10px; /* فاصله از چپ */
+                border-radius: 3px 0 0 3px;
+                }
+
+            .next {
+            right: 10px; /* فاصله از راست */
+            border-radius: 0 3px 3px 0;
+            }
+
+            .prev:hover, .next:hover {
+            background-color: rgba(198, 196, 196, 0.8);
+            }
+
+            .text {
+            color: #f2f2f2;
+            font-size: 20px;
+            padding: 8px 12px;
+            position: absolute;
+            bottom: 8px;
+            width: 100%;
+            text-align: center;
+            font-weight: 600;
+            }
+
+            .numbertext {
+            color: #f2f2f2;
+            font-size: 12px;
+            padding: 8px 12px;
+            position: absolute;
+            top: 0;
+            }
+
+            .dot {
+            cursor: pointer;
+            height: 15px;
+            width: 15px;
+            margin: 0 2px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.6s ease;
+            }
+
+
+            .fade {
+            animation-name: fade;
+            animation-duration: 1.5s;
+            }
+
+            @keyframes fade {
+            from { opacity: 0.4 }
+            to { opacity: 1 }
+            }
+            .about{
+                color: white;
+                margin: 4rem auto;
+                padding: 2rem 3rem;
+                max-width: 1200px;
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 20px;
+                box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+                backdrop-filter: blur(12px);
+                animation: fadeIn 1.2s ease-in-out;
+                transition: all 0.5s ease;
+                line-height: 2;
+
+            }
+            .about h1{
+                text-align: center;
+                font-size: 2.3rem;
+                color: #9dd7f2;
+                margin-bottom: 2rem;
+                position: relative;
+                animation: slideUp 1s ease forwards;
+            }
+            .about h1::after {
+                content: '';
+                position: absolute;
+                bottom: -10px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 60px;
+                height: 3px;
+                background-color: #9dd7f2;
+                border-radius: 2px;
+            }
+            .about p{
+                font-size: 1.2rem;
+                margin-bottom: 2rem;
+                animation: fadeIn 1.5s ease-in-out;
+                text-align: justify;
+            }
+            .about h3{
+                font-size: 1.4rem;
+                margin-top: 2rem;
+                margin-bottom: 1rem;
+                color: #a4d8e3;
+                animation: fadeIn 1.5s ease-in-out;
+            }
+            .about ul {
+                padding-right: 1rem;
+            }
+
+            .about li{
+                font-size: 1.1rem;
+                margin-bottom: 1rem;
+                padding-right: 1.5rem;
+                position: relative;
+            }
+            .about li::before {
+            position: absolute;
+            right: 0;
+            color: #6fe0c4;
+            }
+               @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            }
+
+            @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            }
+
+            @media (max-width: 768px) {
+            .about {
+                padding: 1.5rem;
+            }
+
+            .about h1 {
+                font-size: 1.6rem;
+            }
+
+            .about p,
+            .about li {
+                font-size: 1rem;
+            }
+
+            .about h3 {
+                font-size: 1.2rem;
+            }
+            }
+            footer.footer {
+                background: url(./back.png) no-repeat center center/cover;
+                color: white;
+                padding: 3rem 2rem 1.5rem 2rem;
+                font-family: 'B Titr', sans-serif;
+                 backdrop-filter: blur(12px);
+                box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+                position: relative;
+            }
+            footer.footer::before {
+                content: "";
+                position: absolute;
+                top: 0; left: 0;
+                width: 100%; height: 100%;
+                background-color: rgba(0,0,0,0.6);
+                z-index: 0;
+            }
+
+            .footer-container {
+                display: flex;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                max-width: 1200px;
+                margin: 0 auto;
+                gap: 2rem;
+                position: relative;
+                z-index: 1;
+            }
+
+            .footer-section {
+                flex: 1 1 250px;
+            }
+
+            .footer-section h2,
+            .footer-section h3 {
+                color: #9dd7f2;
+                margin-bottom: 1rem;
+            }
+
+            .footer-section p,
+            .footer-section li a,
+            .footer-section a {
+                font-size: 1rem;
+                line-height: 1.8;
+                text-decoration: none;
+                color: #fff;
+                text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+            }
+
+            .footer-section ul {
+                list-style: none;
+                padding: 0;
+            }
+
+            .footer-section ul li {
+                margin-bottom: 0.7rem;
+            }
+
+            .footer-section ul li a:hover,
+            .footer-section a:hover {
+                color: #6fe0c4;
+                transition: color 0.3s ease;
+            }
+
+            .footer-bottom {
+                text-align: center;
+                margin-top: 2rem;
+                padding-top: 1rem;
+                border-top: 1px solid rgba(255,255,255,0.2);
+                font-size: 0.9rem;
+                color: #999;
+            }
+
+            @media (max-width: 768px) {
+                .footer-container {
+                    flex-direction: column;
+                    text-align: center;
+                    gap: 1.5rem;
+                }
+                .footer-section {
+                    flex: 1 1 100%;
+                }
+            }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+    <header>
+        <nav class="navbar">
+            <div class="navbar-container">
+                <a href="index.html" class="navbar-logo">
+                    <img class="navbar-logo-img" src="./logo1.png" alt="">
+                    <span class="logo-text">پیشگامان آرامش دماوند</span>
+                </a>
+                <button class="navbar-toggle">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </button>
+                <ul class="navbar-menu">
+                    <li><a href="#" class="active">درباره شرکت</a></li>
+                    <li><a href="#">خدمات</a></li>
+                    <li><a href="#">آموزش</a></li>
+                    <li><a href="#">استخدام</a></li>
+                    <li><a href="#">مقالات</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <main>
+<div class="slideshow-container" id="slideshow">
+
+  <div class="mySlides fade">
+      <img src="./عکس۲۲.jpg" style="width:100%;height: 100%;">
+      <div class="text">شهرک ارکیده</div>
+  </div>
+
+  <div class="mySlides fade">
+      <img src="./عکس۴.jpg" style="width:100%;height:100%;">
+      <div class="text">موسسه پیشگامان آرامش دماوند</div>
+  </div>
+
+  <div class="mySlides fade">
+      <img src="./عکس۳.jpg" style="width:100%;height:100%;">
+      <div class="text">موسسه پیشگامان آرامش دماوند</div>
+  </div>
+
+  <!-- Next and previous buttons -->
+  <a class="prev" onclick="plusSlides(-1)">&#10095;</a>
+  <a class="next" onclick="plusSlides(1)">&#10094;</a>
+</div>
+
+        <div class="about">
+            <h1 >معرفی مؤسسه حفاظتی و مراقبتی پاد (پیشگامان آرامش دماوند)</h1>
+            <p>
+                در دنیای امروز، با رشد سریع جمعیت و پیچیدگی روزافزون شرایط فرهنگی، اقتصادی و اجتماعی، ایجاد امنیت و آرامش در جامعه از اهمیت بسیار بالایی برخوردار است. تجربه نشان داده است که استفاده از نیروهای آموزش‌دیده بخش خصوصی، در کنار نیروی انتظامی، می‌تواند نقش مهمی در پیشگیری از جرائم و برقراری نظم عمومی ایفا کند.
+
+                بر همین اساس و با تأیید رسمی نیروی انتظامی، مؤسسه حفاظتی و مراقبتی پاد (پیشگامان آرامش دماوند) با شماره ثبت ۲۹۲ فعالیت خود را آغاز کرده است. این مؤسسه با بهره‌گیری از کارشناسان با تجربه و افسران بازنشسته نیروی انتظامی، خدمات حرفه‌ای و تخصصی را در راستای ایجاد امنیت و آرامش شهروندان ارائه می‌دهد.
+            </p>
+            <h1 >ماموریت ما</h1>
+            <p>
+                ما با شعار “چشمان تیزبین امنیت” در راستای ارتقاء امنیت عمومی، پیشگیری از وقوع جرائم و حفاظت از اموال و دارایی‌های مردم، در کنار نیروی انتظامی و مطابق با دستورالعمل‌های مرکز انتظام، فعالیت می‌کنیم.
+            </p>
+            <h1>حوزه‌های فعالیت</h1>
+            <h3>خدمات حفاظتی و مراقبتی:</h3>
+            <ul>
+                <li>ارائه خدمات مشاوره ای و آموزش در زمینه اقدامات حفاظتی و مراقبتی</li>
+                <li>تهیه طرح های حفاظتی و مراقبتی برای اماکن فاقد رده حفاظتی</li>
+                <li>حفاظت و مراقبت از بانکها و موسسات پولی و اعتباری، مراکز دولتی و سازمانها،  کمپ ها ، معادن و انبارها ،کارخانجات و مجتمع های صنفی و صنعتی ، مراکز درمانی و بیمارستان ، مجتمع های مسکونی، ورزشی  و شرکت ها ، جلسات ،کنفرانسها ،سمینارها و مهمانی های رسمی، پارکینگ های عمومی و خصوصی</li>
+                <li>انجام امورات انتظامی از طریق گماردن نگهبانان ثابت جهت کنترل تردد پرسنل و بازرسی خودروها و کالا و استقرار نگهبان گشت جهت نظارت بر نظم محیط کار</li>
+                <li>حفاظت و نگهداری از اسناد، مدارک و اوراق بهادار، حمل پول</li>
+                <li>نصب و پشتیبانی تجهیزات الکترونیکی حفاظتی با استفاده از فناوری های نوین با همکاری شرکتهای کاملا تخصصی</li>
+                <li>حفاظت از گردشگران و تورهای گردشگری و ایجاد محیط امن برای سرمایه گذاری خارجی</li>
+                <li>استفاده از نیروهای مسلح و مجهز با هماهنگی نیروی انتظامی در شرایط خاص</li>
+                <li>اجرای طرح پیمان مدیریتی جهت مدیریت بخش حفاظتی و مراقبتی سازمانها و شرکتها با استفاده از پرسنل خود</li>
+                <li>سرویس ویژه پاد  نگهبانی هوشمند ویژه حفاظت از اماکن، منازل و ویلا های شخصی
+                    در این طرح با انعقاد قرارداد و اتصال سیستمهای حفاظتی خود به مرکز کنترل این موسسه ،مسئولیت نگهبانی و حراست و مراقبت از منزل، ویلا، مغازه و یا مجتمع خود را به ما بسپارید. و با حضور مستمر عوامل گشت و نگهبانی در طی شبانه روز در محل های تحت پوشش در مقابل سرقت، مزاحمت، زورگیری و حتی موارد مشکوک از خود اطرافیان و محل زندگی ، کار خود مراقبت و محافظت نمایید .
+                    این طرح برای اولین بار در استان تهران در حال اجرا می باشد</li>
+                    <li>با نصب سیستم های حفاظتی در محل مورد نظر شما و اتصال آن به مرکز کنترل این موسسه که به صورت 24 ساعته فعال می باشد  و بازدید های نوبه ای در شبانه روز محل مورد نظر  خود را پلمب شده به ما تحویل داده و در بازگشت از سفر با اطمینان خاطر از ما تحویل بگیرید.</li>
+                    <li>
+                        با اتصال سیستم اعلام خطر به مرکز کنترل این موسسه در صورت بروز هرگونه خطر سریعا نیروهای این موسسه خود را به محل رسانده و ضمن بررسی موضوع در صورت نیاز عوامل انتظامی در محل حاظر میگردند.
+                    </li>
+                    <li>
+                        در صورت حضور در محل خود و مشاهده موارد مشکوک و یا قرار گرفتن در موقعیت خطر به راحتی با اعلام خطر (فقط فشار دادن یک کلید )می توانید از حضور فوری عوامل گشت و نگهبانی  تا ایجاد اطمینان روانی کامل برای افراد بهرهمند شوید.
+                    </li>
+                    <li>
+                        همچنین گشتهای نگهبانی ضمن سرکشی از نقاط تحت پوشش در طول 24 ساعت شبانه روز موارد احتمالی را به صورت مستمر بررسی و مورد بازبینی قرار خواهند داد.
+                    </li>
+            </ul>
+            <h3>سیستم‌های نظارتی و الکترونیکی:</h3>
+            <ul>
+                <li>طراحی، نصب و راه‌اندازی سیستم‌های نظارت تصویری و کنترل تردد</li>
+                <li>ایجاد مراکز کنترل هوشمند با بهره‌گیری از مهندسین متخصص</li>
+                <li>استفاده از گیت‌های عبور، دوربین‌های مدار بسته و تجهیزات پیشرفته حفاظتی</li>
+                <li>بهره‌برداری از پرسنل آموزش‌دیده برای مدیریت این سامانه‌ها</li>
+            </ul>
+            <h3>ارزش‌های ما:</h3>
+            <p>
+                ✔️ تخصص و تجربه
+                ✔️ تعهد به امنیت شهروندان
+                ✔️ پاسخ‌گویی سریع و دقیق
+                ✔️ همگام با استانداردهای روز حفاظتی و نظارتی
+            </p>
+        </div>
+    </main>
+    <footer>
+         <div class="footer-container">
+        <div class="footer-section about">
+            <h2>پیشگامان آرامش دماوند</h2>
+            <p>
+                ارائه خدمات حفاظتی و مراقبتی حرفه‌ای با نیروهای آموزش‌دیده و تجهیزات مدرن، تحت نظارت نیروی انتظامی.
+            </p>
+        </div>
+        <div class="footer-section links">
+            <h3>لینک‌های مفید</h3>
+            <ul>
+                <li><a href="#">صفحه اصلی</a></li>
+                <li><a href="#">درباره شرکت</a></li>
+                <li><a href="#">خدمات</a></li>
+                <li><a href="#">تماس با ما</a></li>
+            </ul>
+        </div>
+        <div class="footer-section contact">
+            <h3>اطلاعات تماس</h3>
+            <p>📍 آدرس: گیلاوند، خیابان قندی، ساختمان اداری البرز، طبقه دوم، واحد 8</p>
+            <p>📞 تلفن: 021-76340647</p>
+            <p>📱 موبایل: 09905763066</p>
+            <p>✉️ ایمیل: <a href="mailto:PadSecur@gmail.com">PadSecur@gmail.com</a></p>
+            <p>🌐 سایت: <a href="https://www.padcity.ir" target="_blank">www.padcity.ir</a></p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2025 پیشگامان آرامش دماوند | کلیه حقوق محفوظ است.</p>
+    </div>
+    </footer>
+    </div>
+    
+</body>
+<script>
+    const navbarToggle = document.querySelector('.navbar-toggle');
+    const navbarMenu = document.querySelector('.navbar-menu');
+
+    navbarToggle.addEventListener('click', () => {
+        navbarToggle.classList.toggle('active');
+        navbarMenu.classList.toggle('active');
+    });
+
+   let slideIndex = 0;
+const slides = document.getElementsByClassName("mySlides");
+let autoPlayInterval;
+
+function showSlidesAuto() {
+    for (let i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+    }
+    slideIndex++;
+    if (slideIndex > slides.length) {slideIndex = 1}
+    slides[slideIndex-1].style.display = "block";
+}
+
+function plusSlides(n) {
+    slideIndex += n-1; // چون showSlidesAuto بعدش یک بار slideIndex++ می‌کند
+    if(slideIndex < 0) slideIndex = slides.length - 1;
+    showSlidesAuto();
+    resetAutoPlay();
+}
+
+function startAutoPlay() {
+    autoPlayInterval = setInterval(showSlidesAuto, 4000);
+}
+
+function stopAutoPlay() {
+    clearInterval(autoPlayInterval);
+}
+
+function resetAutoPlay() {
+    stopAutoPlay();
+    startAutoPlay();
+}
+
+// شروع اتوپلی
+showSlidesAuto();
+startAutoPlay();
+
+// توقف هنگام هاور
+const slideshow = document.getElementById("slideshow");
+slideshow.addEventListener("mouseenter", stopAutoPlay);
+slideshow.addEventListener("mouseleave", startAutoPlay);
+</script>
+</html>
